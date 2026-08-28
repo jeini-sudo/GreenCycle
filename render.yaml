@@ -1,7 +1,7 @@
 services:
   - type: web
     # Cambiar por un nombre único antes de crear el Blueprint.
-    name: webdev-laravel-starter
+    name: green-cycle-jeini
     runtime: docker
     plan: free
     region: virginia
@@ -13,7 +13,7 @@ services:
 
     envVars:
       - key: APP_NAME
-        value: Desarrollo Web con Laravel
+        value: Proyecto Interactivas Green Cycle
       - key: APP_ENV
         value: production
       - key: APP_DEBUG
