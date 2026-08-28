@@ -8,16 +8,15 @@
          ============================================ -->
     <section class="hero">
         <p class="eyebrow">
-            Proyecto base del curso
+            Proyecto Green Cycle del curso
         </p>
 
         <h1>
-            Desarrollo backend con Laravel
+            Desarrollo de aplicaciones interactivas
         </h1>
 
         <p class="hero__description">
-            Esta aplicación servirá como punto de partida para aprender arquitectura MVC,
-            Blade, Eloquent, validación, pruebas, control de versiones y despliegue.
+            Este es el blueprint editado, para el proyecto
         </p>
 
         <span class="hero__status" data-app-status>
