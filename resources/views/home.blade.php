@@ -7,21 +7,21 @@
          SECCIÓN HERO
          ============================================ -->
     <section class="hero">
-        <p class="eyebrow">
-            Proyecto Green Cycle del curso
-        </p>
+    <p class="eyebrow">
+        Proyecto Green Cycle del curso
+    </p>
 
-        <h1>
-            Desarrollo de aplicaciones interactivas
-        </h1>
+    <h1>
+        Desarrollo backend con Laravel
+    </h1>
 
-        <p class="hero__description">
-            Este es el blueprint editado, para el proyecto
-        </p>
+    <p class="hero__description">
+        Desarrollo de aplicaciones interactivas — Proyecto Green Cycle
+    </p>
 
-        <span class="hero__status" data-app-status>
-            Comprobando JavaScript y Vite…
-        </span>
+    <span class="hero__status" data-app-status>
+        Comprobando JavaScript y Vite…
+    </span>
     </section>
 
     <!-- ============================================
