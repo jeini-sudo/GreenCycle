@@ -1,69 +1,60 @@
-# Web Development Laravel Starter
+# GreenCycle
 
-Proyecto base para el curso **TM4100**, preparado para desarrollar aplicaciones web con Laravel en un entorno reproducible.
+GreenCycle es una aplicación web gamificada en la que cada persona usuaria administra un vivero digital. El sistema permite gestionar árboles cuyo crecimiento, salud y estado dependen de reglas determinadas por el servidor.
 
-## Propósito
+El proyecto está desarrollado como una aplicación cliente-servidor utilizando Laravel para el backend y HTML, CSS y JavaScript para la interfaz.
 
-Esta aplicación proporciona un entorno inicial para aprender y practicar:
+## Alcance Actual
 
-- Arquitectura MVC.
-- Rutas y controladores.
-- Vistas con Blade.
-- Formularios y validación de datos.
-- Eloquent ORM.
-- Migraciones y seeders.
-- Integración con PostgreSQL.
-- Pruebas automatizadas.
-- Control de versiones con Git y GitHub.
-- Integración continua con GitHub Actions.
-- Despliegue de aplicaciones web.
+Actualmente el proyecto se encuentra en el desarrollo del Sprint 1.
 
-## Tecnologías
+En esta etapa se establecen las bases del proyecto, incluyendo:
 
-El proyecto utiliza las siguientes tecnologías:
+* Modelado de datos.
+* Migraciones y estructura de la base de datos.
+* Seeders.
+* Configuración del proyecto Laravel.
+* Preparación de la API para la gestión de árboles.
+* Configuración de PostgreSQL mediante Neon.
+* Configuración del entorno de desarrollo.
+* Despliegue del proyecto en Render.
+* Estructura base de la interfaz.
 
-- PHP 8.5.
-- Laravel 13.
-- Laravel Herd.
-- Blade.
-- CSS.
-- JavaScript.
-- Vite.
-- PostgreSQL en Neon.
-- PHPUnit.
-- Laravel Pint.
-- GitHub Actions.
-- Render.
+Las funcionalidades de cuidado de árboles, progreso, niveles, deterioro de salud, cooldown, procesos programados, cosecha, monedas, tienda e inventario corresponden a sprints posteriores.
 
-## Requisitos locales
+La implementación de autenticación, autorización y las funcionalidades completas de la API se encuentra en desarrollo según el avance del Sprint 1.
 
-Antes de instalar el proyecto, asegúrese de contar con:
+## Stack / Requisitos locales
 
-- Windows 10 o una versión posterior.
-- Laravel Herd.
-- PHP 8.5.
-- Composer 2.
-- Node.js 26.
-- npm.
-- Git.
-- Visual Studio Code.
-- Una cuenta de Neon.
-- Una cuenta de Render.
+Para ejecutar el proyecto localmente se recomienda contar con:
 
-> No es necesario instalar Docker ni PostgreSQL localmente.
+* Windows 10 o superior.
+* Laravel Herd.
+* PHP 8.5.
+* Composer 2.
+* Node.js 26.
+* npm.
+* Git.
+* Visual Studio Code.
 
-## Instalación local
+No es necesario instalar PostgreSQL localmente, ya que el proyecto utiliza PostgreSQL alojado en Neon.
+
+Docker tampoco es necesario para el entorno definido actualmente.
+
+## Instalación
 
 ### 1. Clonar el repositorio
 
 Abra PowerShell y ejecute:
 
 ```powershell
-git clone URL_DEL_REPOSITORIO
-Set-Location webdev-laravel-starter
+git clone https://github.com/jeini-sudo/GreenCycle.git
+Set-Location GreenCycle
 ```
 
-### 2. Aplicar la configuración de Laravel Herd
+### 2. Configurar Laravel Herd
+
+Si se utiliza Laravel Herd para el entorno local:
 
 ```powershell
 herd init
@@ -72,35 +63,41 @@ herd isolate 8.5
 
 ### 3. Seleccionar la versión de Node.js
 
+Si el proyecto cuenta con una versión de Node.js definida mediante la configuración correspondiente:
+
 ```powershell
 nvm use
 ```
 
-> Este comando utiliza la versión de Node.js definida para el proyecto.
+
 
 ### 4. Instalar las dependencias
 
-Instale las dependencias de PHP:
+Instalar las dependencias de PHP:
 
 ```powershell
 composer install
 ```
 
-Instale las dependencias de frontend:
+Instalar las dependencias de frontend:
 
 ```powershell
-npm ci
+npm install
 ```
 
-### 5. Crear la configuración local
+También puede utilizarse `npm ci` cuando se desee realizar una instalación basada estrictamente en el archivo de bloqueo del proyecto.
 
-Copie el archivo de configuración de ejemplo:
+### 5. Crear el archivo de configuración
+
+Copie `.env.example` como `.env`.
+
+En PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
 ```
 
-Genere la clave de la aplicación:
+Después genere la clave de la aplicación:
 
 ```powershell
 php artisan key:generate
@@ -108,17 +105,23 @@ php artisan key:generate
 
 ### 6. Configurar la base de datos
 
-Abra el archivo `.env` y agregue la conexión correspondiente a la rama `development` de Neon:
+GreenCycle utiliza PostgreSQL mediante Neon.
+
+En el archivo `.env` se deben configurar las variables correspondientes:
 
 ```dotenv
 DB_CONNECTION=pgsql
-DB_URL="URL_DE_NEON_DEVELOPMENT"
+DB_URL="URL_DE_NEON"
 DB_SSLMODE=require
 ```
 
-> Sustituya `URL_DE_NEON_DEVELOPMENT` por la cadena de conexión proporcionada por Neon.
+La URL real de conexión debe permanecer únicamente en el archivo `.env` y no debe publicarse en GitHub.
+
+El archivo `.env.example` debe contener únicamente valores de ejemplo o espacios para las variables necesarias.
 
 ### 7. Limpiar la configuración almacenada
+
+Ejecute:
 
 ```powershell
 php artisan optimize:clear
@@ -126,11 +129,23 @@ php artisan optimize:clear
 
 ### 8. Ejecutar las migraciones y seeders
 
+Para crear las tablas y ejecutar los seeders:
+
 ```powershell
 php artisan migrate --seed
 ```
 
-### 9. Iniciar Vite
+En un entorno de desarrollo, si se necesita reconstruir completamente la base de datos, puede utilizarse:
+
+```powershell
+php artisan migrate:fresh --seed
+```
+
+Este último comando elimina las tablas existentes, por lo que no debe utilizarse sobre una base de datos que contenga información que se quiera conservar.
+
+### 9. Iniciar el frontend
+
+Ejecute:
 
 ```powershell
 npm run dev
@@ -138,25 +153,63 @@ npm run dev
 
 Mantenga esta terminal abierta mientras desarrolla la aplicación.
 
-### 10. Abrir la aplicación
+### 10. Ejecutar la aplicación
 
-Visite la siguiente dirección en el navegador:
+Si se utiliza Laravel Herd, la aplicación podrá abrirse mediante el dominio local configurado por Herd.
 
-```text
-http://webdev-laravel-starter.test
+También puede utilizarse el servidor de desarrollo de Laravel:
+
+```powershell
+php artisan serve
 ```
 
-## Comprobaciones del proyecto
+En ese caso, la aplicación estará disponible normalmente en:
 
-Antes de crear un commit o un pull request, ejecute las siguientes comprobaciones.
+```text
+http://127.0.0.1:8000
+```
 
-### Ejecutar las pruebas automatizadas
+## Configuración del entorno
+
+Las variables principales utilizadas para la conexión con la base de datos son:
+
+```dotenv
+DB_CONNECTION=pgsql
+DB_URL=
+DB_SSLMODE=require
+```
+
+No se deben incluir en el repositorio:
+
+* `.env`
+* Contraseñas.
+* Tokens.
+* APP_KEY.
+* Claves de API.
+* Credenciales de Neon.
+* Cadenas reales de conexión a bases de datos.
+* Información privada.
+
+Antes de realizar un commit se recomienda comprobar los archivos modificados:
+
+```powershell
+git status
+```
+
+
+## Pruebas y verificación
+
+El proyecto contempla pruebas automatizadas mediante PHPUnit.
+
+Para ejecutar las pruebas:
 
 ```powershell
 php artisan test
 ```
 
-### Comprobar el formato del código PHP
+Actualmente las pruebas automatizadas se encuentran pendientes de acuerdo con el avance del proyecto.
+
+Para comprobar el formato del código PHP mediante Laravel Pint:
 
 ```powershell
 .\vendor\bin\pint --test
@@ -168,109 +221,62 @@ Para corregir automáticamente el formato:
 .\vendor\bin\pint
 ```
 
-### Crear los recursos de producción
+Para generar los recursos frontend de producción:
 
 ```powershell
 npm run build
 ```
 
-## Ambientes
+Las pruebas específicas de las reglas temporales, como cooldown, deterioro, salud, progreso y estados, corresponden principalmente al Sprint 2.
 
-| Ambiente | Aplicación | Base de datos |
-|---|---|---|
-| Desarrollo | Laravel Herd | Neon `development` |
-| Pruebas | PHPUnit | SQLite en memoria |
-| Producción | Render | Neon `production` |
+
+### API futura
+
+Durante los siguientes sprints se contempla agregar funcionalidades como:
+
+```http
+POST /api/trees/{tree}/care
+GET /api/trees/{tree}/effects
+POST /api/trees/{tree}/effects/{shop_item_id}
+GET /api/shop/items
+GET /api/inventory
+POST /api/inventory/{item}/use
+POST /api/shop/items/{item}/buy
+PUT /api/trees/{tree}/harvest
+DELETE /api/trees/{tree}
+```
+
+Estas rutas no deben considerarse implementadas únicamente por aparecer documentadas aquí. Su implementación corresponde al avance de los siguientes sprints.
+
+## Credenciales de demostración
+
+Actualmente no se incluyen credenciales personales o cuentas de demostración en este README.
+
+Si posteriormente se crea una cuenta específica para demostraciones, se deberá utilizar una cuenta independiente y nunca credenciales personales de los integrantes del equipo.
 
 ## Seguridad
 
-Nunca deben publicarse o incluirse en el repositorio:
+Nunca se deben publicar en el repositorio:
 
-- El archivo `.env`.
-- Las credenciales de Neon.
-- El valor de `APP_KEY`.
-- Tokens de GitHub.
-- Contraseñas.
-- Claves de API.
-- Archivos que contengan información privada.
-- Cadenas de conexión de bases de datos.
+* El archivo `.env`.
+* Contraseñas.
+* Tokens.
+* Credenciales de Neon.
+* APP_KEY.
+* Claves de API.
+* Cadenas reales de conexión.
+* Información privada.
 
-Antes de realizar un commit, revise los archivos modificados:
+El archivo `.env.example` debe documentar las variables necesarias para configurar el proyecto sin incluir valores secretos.
 
-```powershell
-git status
-```
+## Equipo
 
-## Flujo de trabajo
+Brandon Víquez Camacho - C4L087
 
-El flujo recomendado para desarrollar una funcionalidad es el siguiente:
+Jeinier Daniel Jiménez Navarro - C4G272
 
-1. Actualizar la rama `main`.
-2. Crear una nueva rama de trabajo.
-3. Desarrollar la funcionalidad.
-4. Ejecutar las pruebas localmente.
-5. Comprobar el formato del código.
-6. Crear el commit.
-7. Publicar la rama en GitHub.
-8. Crear un pull request.
-9. Esperar las comprobaciones automáticas.
-10. Revisar el código.
-11. Fusionar el pull request mediante **squash**.
-12. Actualizar el repositorio local.
+Kendall Pérez Cruz - C4I340
 
-### Actualizar la rama principal
+Repositorio:
 
-```powershell
-git switch main
-git pull origin main
-```
-
-### Crear una rama de trabajo
-
-```powershell
-git switch -c feature/nombre-de-la-funcionalidad
-```
-
-### Guardar los cambios
-
-```powershell
-git add .
-git commit -m "feat: agregar nombre de la funcionalidad"
-```
-
-### Publicar la rama
-
-```powershell
-git push -u origin feature/nombre-de-la-funcionalidad
-```
-
-### Actualizar el repositorio después de fusionar
-
-```powershell
-git switch main
-git pull origin main
-```
-
-## Configuración pendiente
-
-Antes de distribuir el proyecto, sustituya:
-
-```text
-URL_DEL_REPOSITORIO
-```
-
-por la URL real del repositorio en GitHub.
-
-También debe sustituir:
-
-```text
-URL_DE_NEON_DEVELOPMENT
-```
-
-por la cadena de conexión de la base de datos de desarrollo en Neon.
-
-
-## Estado del proyecto
-El repositorio utiliza GitHub Actions para validar pruebas, formato y recursos frontend.
-=======
-<!-- branch protection test -->
+https://github.com/jeini-sudo/GreenCycle
