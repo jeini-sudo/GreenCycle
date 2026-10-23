@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     // un usuario puede tener muchas compras,
     // pero una compra solo puede pertenecer a un usuario
-    public function purchases_history(): HasMany
+    public function purchaseHistories(): HasMany
     {
         return $this->hasMany(PurchaseHistory::class);
     }
