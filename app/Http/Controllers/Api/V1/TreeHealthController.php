@@ -19,11 +19,8 @@ class TreeHealthController extends Controller
 
     public function restoreHealth(Tree $tree): void
     {
-        // no recuperar salud si esta muerto o cosechado
-        if (
-            $tree->status === TreeStatus::Dead ||
-            $tree->status === TreeStatus::Harvested
-        ) {
+        // no recuperar salud si esta muerto o cosechado o maduro
+        if ($tree->status === TreeStatus::Dead || $tree->status === TreeStatus::Harvested || $tree->status === TreeStatus::Mature) {
             return;
         }
 
