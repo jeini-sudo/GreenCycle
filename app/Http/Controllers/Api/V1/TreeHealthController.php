@@ -29,9 +29,7 @@ class TreeHealthController extends Controller
             $tree->health + self::HEALTH_RECOVERY
         );
 
-        $tree->forceFill([
-            'health' => $newHealth,
-        ])->save();
+        $tree->health = $newHealth;
     }
 
     public function applyDecay(Tree $tree): void
@@ -65,7 +63,7 @@ class TreeHealthController extends Controller
 
             $elapsedSeconds = max(
                 0,
-                (int) $startDate->diffInSeconds(now(), false)
+                now()->getTimestamp() - $startDate->getTimestamp()
             );
 
             $intervalSeconds = self::DECAY_INTERVAL_HOURS * 3600;
