@@ -22,7 +22,7 @@ return new class extends Migration
             $table->unsignedInteger('level')->default(0);
             $table->unsignedInteger('progress')->default(0);
             $table->unsignedInteger('health')->default(100);
-            $table->string('status', 20)->default('alive');
+            $table->string('status', 20)->default('active');
             $table->timestamps('last_cared_at')->nullable();
             $table->timestamps('next_care_at')->nullable();
             $table->timestamps('last_decay_at')->nullable();

@@ -14,6 +14,17 @@ class TreeResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        //No sé donde meter el slug y todo eso, para ser honesto
+        return [
+            'level'=>$this->level,
+            'progress'=>$this->progress,
+            'health'=>$this->health,
+            'status'=>$this->status,
+            'last_care_at'=>$this->last_care_at?->toISOString(),
+            'next_care_at'=>$this->next_care_at?->toISOString(),
+            'last_decay_at'=>$this->last_decay_at?->toISOString(),
+            'harvested_at'=>$this->harvested_at?->toISOString(),
+
+        ]
     }
 }
