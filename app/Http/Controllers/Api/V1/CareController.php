@@ -9,57 +9,55 @@ use App\Http\Resources\TreeResource;
 use App\Models\Tree;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Validation\ValidationException;
 
 class CareController extends Controller
 {
     private const COOLDOWN_MINUTES = 60;
 
-  
+
     private const HEALTH_PER_CARE = 20;
 
-       private const MAX_LEVEL = 10;
+    private const MAX_LEVEL = 10;
 
-   
+
     public function store(Request $request, Tree $tree)
     {
-        
-        $this->ensureUserOwnsTree($request, $tree);     
+
+        $this->ensureUserOwnsTree($request, $tree);
 
 
-       if ($tree->status !== TreeStatus::Active) {
-    return response()->json([
-        'error' => 'Este árbol ya no puede recibir más cuidados.',
-    ], Response::HTTP_CONFLICT);
+        if ($tree->status !== TreeStatus::Active) {
+            return response()->json([
+                'error' => 'Este árbol ya no puede recibir más cuidados.',
+            ], Response::HTTP_CONFLICT);
 
-    
-}
+
+        }
 
         if ($tree->next_care_at?->isFuture()) {
-            $minutesLeft = (int) ceil(now()->diffInMinutes($tree->next_care_at));
-
-            throw ValidationException::withMessages([
-                'care' => "This tree is on cooldown. Try again in {$minutesLeft} minute(s).",
-            ]);
+            return response()->json([
+                'error' => 'El árbol todavía está en tiempo de espera.',
+                'next_care_at' => $tree->next_care_at->toISOString(),
+            ], Response::HTTP_CONFLICT);
         }
 
         $this->applyCareToTree($tree);
 
 
         return response()->json([
-    'message' => 'Cuidado aplicado con éxito',
-    'tree' => new TreeResource($tree),
-]);
+            'message' => 'Cuidado aplicado con éxito',
+            'tree' => new TreeResource($tree),
+        ]);
     }
 
     private function applyCareToTree(Tree $tree): void
     {
-         $newProgress = $tree->progress + 1;
-    $newLevel = $tree->level;
+        $newProgress = $tree->progress + 1;
+        $newLevel = $tree->level;
 
-    if ($newProgress >= $tree->seed->cares_per_level) {
-        $newLevel++;
-        $newProgress = 0;
+        if ($newProgress >= $tree->seed->cares_per_level) {
+            $newLevel++;
+            $newProgress = 0;
         }
 
         $tree->forceFill([
@@ -74,7 +72,7 @@ class CareController extends Controller
 
 
     private function ensureUserOwnsTree(Request $request, Tree $tree): void
-{
-    abort_unless($tree->user_id === $request->user()->id, Response::HTTP_FORBIDDEN);
-}
+    {
+        abort_unless($tree->user_id === $request->user()->id, Response::HTTP_FORBIDDEN);
+    }
 }

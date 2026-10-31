@@ -19,7 +19,6 @@ class SeedFactory extends Factory
     {
         return [
             //
-            'user_id' => User::factory(),
             'seed_name' => fake()->unique()->word() . 'Seed',
             'special_seed' => false,
             'cares_per_level' => 5,

@@ -4,10 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Database\Factories\SeedFactory;
 
 class Seed extends Model
 {
-   
+    /** @use HasFactory<SeedFactory> */
+    use HasFactory;
+
     protected $fillable = [
         'seed_name',
         'special_seed',
