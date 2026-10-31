@@ -57,7 +57,7 @@ class Tree extends Model
     {
         if ($this->status !== TreeStatus::Mature) {
             throw ValidationException::withMessages([
-                'tree' => 'This tree is not mature enough to harvest.',
+                'tree' => 'Este árbol no está listo para cosechar',
             ]);
         }
 
