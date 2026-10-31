@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\V1\AuthController;
+use App\Http\Controllers\Api\V1\TreeController;
+use App\Http\Controllers\Api\V1\CareController;
 
 /* 
 Route::get('/user', function (Request $request) {
@@ -24,6 +26,11 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('user', [AuthController::class, 'me'])->name('user');
 
     //Aquí abajo ir agregando el resto de rutas
+    Route::apiResource('trees', TreeController::class)
+        ->only(['index', 'store', 'show']);
+
+    Route::post('trees/{tree}/care', [CareController::class, 'store'])
+        ->name('trees.care');
 
 
 });

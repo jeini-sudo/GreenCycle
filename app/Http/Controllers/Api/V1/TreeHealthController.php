@@ -29,7 +29,9 @@ class TreeHealthController extends Controller
             $tree->health + self::HEALTH_RECOVERY
         );
 
-        $tree->health = $newHealth;
+        $tree->forceFill([
+            'health' => $newHealth,
+        ])->save();
     }
 
     public function applyDecay(Tree $tree): void
@@ -42,7 +44,8 @@ class TreeHealthController extends Controller
 
             if (
                 $lockedTree->status === TreeStatus::Dead ||
-                $lockedTree->status === TreeStatus::Harvested
+                $lockedTree->status === TreeStatus::Harvested ||
+                $lockedTree->status === TreeStatus::Mature
             ) {
                 return;
             }
