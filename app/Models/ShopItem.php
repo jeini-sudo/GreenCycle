@@ -5,21 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-
-class Shop_item extends Model
+class ShopItem extends Model
 {
-    //
-     protected $fillable = [
+    
+    protected $fillable = [
         'name',
         'prize',
-        'description'
+        'description',
     ];
 
-    public function purchases_histories(): HasMany
+    public function purchasesHistories(): HasMany
     {
-        return $this->hasMany(Purchases_history::class);
+        return $this->hasMany(PurchasesHistory::class);
     }
-    
+
     public function inventories(): HasMany
     {
         return $this->hasMany(Inventory::class);

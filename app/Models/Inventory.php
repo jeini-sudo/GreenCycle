@@ -5,22 +5,18 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
 class Inventory extends Model
 {
-    //
-    protected $fillable = [
-        'quantity',
-       
-    ];
+    
+    protected $fillable = [];
 
-     public function users(): BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-     public function shop_items(): BelongsTo
+    public function shopItem(): BelongsTo
     {
-        return $this->belongsTo(Shop_item::class);
+        return $this->belongsTo(ShopItem::class);
     }
 }

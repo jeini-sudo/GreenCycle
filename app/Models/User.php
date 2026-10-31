@@ -35,26 +35,17 @@ class User extends Authenticatable
         ];
     }
 
-
-    // un usuario puede tener muchos arboles, 
-    // pero un arbol solo puede pertenecer a un usuario 
     public function trees(): HasMany
     {
         return $this->hasMany(Tree::class);
     }
 
-
-    // un usuario puede tener muchas compras,
-    // pero una compra solo puede pertenecer a un usuario
-    public function purchases_history(): HasMany
+    public function purchasesHistories(): HasMany
     {
-        return $this->hasMany(PurchaseHistory::class);
+        return $this->hasMany(PurchasesHistory::class);
     }
 
-    // quiza debería cambiarse el nombre por algo como "user_items"
-    // la tabla lo que registra son: item, usuario dueño del item, 
-    // y cantidad de ese item. Son multiples registros porque son distintos items
-    public function inventory(): HasMany
+    public function inventories(): HasMany
     {
         return $this->hasMany(Inventory::class);
     }
