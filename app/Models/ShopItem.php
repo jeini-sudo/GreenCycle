@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ShopItem extends Model
 {
-    // Es catálogo de la tienda (lo siembra el seeder), no lo escribe el cliente.
+    
     protected $fillable = [
         'name',
         'prize',

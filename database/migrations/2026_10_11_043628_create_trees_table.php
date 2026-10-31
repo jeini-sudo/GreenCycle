@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->foreignId('seed_id')->constrained()->cascadeOnDelete();
-            // Reglas del juego: todo árbol inicia en nivel 0, progreso 0, salud 100 y ACTIVE.
             $table->integer('tree_level')->default(0);
             $table->integer('progress')->default(0);
             $table->integer('health')->default(100);
