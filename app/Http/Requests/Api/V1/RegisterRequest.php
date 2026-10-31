@@ -14,7 +14,7 @@ class RegisterRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -28,7 +28,8 @@ class RegisterRequest extends FormRequest
             //
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email'],
-            'password' => ['required', 'string', 'same:password_confirm', Password::defaults()],
+            'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            // se agrego un "confirmed" ver si remplazo same o lo mantengo
             //los coins vienen por default en 0
             ];
     }

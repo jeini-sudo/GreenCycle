@@ -11,25 +11,19 @@ Route::get('/user', function (Request $request) {
 */
 
 
-Route::prefix('v1')
-    ->name('api.v1.')
-    ->group(function (): void {
+Route::post('register', [AuthController::class, 'register'])
+    ->middleware('throttle:5,1')
+    ->name('register');
+Route::post('login', [AuthController::class, 'login'])
+    ->middleware('throttle:5,1')
+    ->name('login');
 
 
-        Route::post('register', [AuthController::class, 'register'])
-            ->middleware('throttle:5,1')
-            ->name('register');
-        Route::post('login', [AuthController::class, 'login'])
-            ->middleware('throttle:5,1')
-            ->name('login');
+Route::middleware('auth:sanctum')->group(function (): void {
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('user', [AuthController::class, 'me'])->name('user');
+
+    //Aquí abajo ir agregando el resto de rutas
 
 
-        Route::middleware('auth:sanctum')->group(function (): void {
-            Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-            Route::get('user', [AuthController::class, 'me'])->name('user');
-
-            //Aquí abajo ir agregando el resto de rutas
-
-    
-        });
-    });
+});
