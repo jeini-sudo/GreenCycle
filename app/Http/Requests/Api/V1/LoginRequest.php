@@ -39,8 +39,8 @@ class LoginRequest extends FormRequest
 
         if (!$user || !Hash::check($this->string('password'), $user->password)) {
             throw ValidationException::withMessages([
-                'email' => 'Las credenciales proporcionadas no son correctas, por favor verifique e intentelo nuevamente.',
-            ]);
+                'email' => 'Las credenciales proporcionadas no son correctas.',
+            ])->status(401);
         }
         return $user;
     }
