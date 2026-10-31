@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchasesHistory extends Model
 {
-    // Vacío a propósito: una compra la arma el servidor (precio real del catálogo,
-    // monedas descontadas, fecha). Se crea con PurchasesHistory::forceCreate([...])
-    // dentro de la transacción de compra, nunca con datos del cliente.
-    protected $fillable = [];
+    
+    protected $fillable = [
+        
+    ];
 
     protected function casts(): array
     {

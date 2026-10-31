@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use App\Models\PurchasesHistory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,24 +39,24 @@ class User extends Authenticatable
 
     // un usuario puede tener muchos arboles, 
     // pero un arbol solo puede pertenecer a un usuario 
-
     public function trees(): HasMany
     {
         return $this->hasMany(Tree::class);
     }
 
 
-    // quiza debería cambiarse el nombre por algo como "user_items"
-    // la tabla lo que registra son: item, usuario dueño del item, 
-    // y cantidad de ese item. Son multiples registros porque son distintos items
-
-    public function purchasesHistories(): HasMany
+    // un usuario puede tener muchas compras,
+    // pero una compra solo puede pertenecer a un usuario
+    public function purchases_history(): HasMany
     {
+
         return $this->hasMany(PurchasesHistory::class);
     }
 
-    public function inventories(): HasMany
-
+    // quiza debería cambiarse el nombre por algo como "user_items"
+    // la tabla lo que registra son: item, usuario dueño del item, 
+    // y cantidad de ese item. Son multiples registros porque son distintos items
+    public function inventory(): HasMany
     {
         return $this->hasMany(Inventory::class);
     }

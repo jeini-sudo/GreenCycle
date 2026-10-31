@@ -7,8 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inventory extends Model
 {
-    // Vacío a propósito: las cantidades solo las modifica el servidor
-    // (al comprar o usar un ítem), nunca el cliente.
+    
     protected $fillable = [];
 
     public function user(): BelongsTo
