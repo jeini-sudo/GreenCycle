@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum TreeStatus: string
 {
-    case Active = 'active';
-    case Mature = 'mature';
-    case Dead = 'dead';
-    case Harvested = 'harvested';
+    case active = 'active';
+    case mature = 'mature';
+    case dead = 'dead';
+    case harvested = 'harvested';
 }

@@ -24,6 +24,7 @@ class StoreTreeRequest extends FormRequest
     {
         return [
             //
+            "seed_id"=>['required','integer','exists:seeds,id']
         ];
     }
 }

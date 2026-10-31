@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\DB;
+
 
 
 class Tree extends Model
@@ -17,7 +19,7 @@ class Tree extends Model
     ];
 
      protected $attributes = [
-        'tree_level' => 0,
+        'level' => 0,
         'progress' => 0,
         'health' => 100,
         'status' => 'active',
@@ -55,7 +57,7 @@ class Tree extends Model
   
     public function harvest(): void
     {
-        if ($this->status !== TreeStatus::Mature) {
+        if ($this->status !== TreeStatus::mature) {
             throw ValidationException::withMessages([
                 'tree' => 'Este árbol no está listo para cosechar',
             ]);
@@ -64,7 +66,7 @@ class Tree extends Model
       
         DB::transaction(function () {
             $this->forceFill([
-                'status' => TreeStatus::Harvested,
+                'status' => TreeStatus::harvested,
                 'harvested_at' => now(),
             ])->save();
 

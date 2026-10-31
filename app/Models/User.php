@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use App\Models\PurchasesHistory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,7 +49,8 @@ class User extends Authenticatable
     // pero una compra solo puede pertenecer a un usuario
     public function purchases_history(): HasMany
     {
-        return $this->hasMany(PurchaseHistory::class);
+
+        return $this->hasMany(PurchasesHistory::class);
     }
 
     // quiza debería cambiarse el nombre por algo como "user_items"

@@ -23,14 +23,17 @@ class CareController extends Controller
    
     public function store(Request $request, Tree $tree)
     {
-        abort_unless($tree->user_id === $request->user()->id, Response::HTTP_NOT_FOUND);
+        
+        $this->ensureUserOwnsTree($request, $tree);     
 
-        // Only growing trees can be cared for (not dead, mature or harvested ones).
-        if ($tree->status !== TreeStatus::Active) {
-            throw ValidationException::withMessages([
-                'care' => 'This tree can no longer be cared for.',
-            ]);
-        }
+
+       if ($tree->status !== TreeStatus::Active) {
+    return response()->json([
+        'error' => 'Este árbol ya no puede recibir más cuidados.',
+    ], Response::HTTP_CONFLICT);
+
+    
+}
 
         if ($tree->next_care_at?->isFuture()) {
             $minutesLeft = (int) ceil(now()->diffInMinutes($tree->next_care_at));
@@ -42,21 +45,36 @@ class CareController extends Controller
 
         $this->applyCareToTree($tree);
 
-        return new TreeResource($tree);
+
+        return response()->json([
+    'message' => 'Cuidado aplicado con éxito',
+    'tree' => new TreeResource($tree),
+]);
     }
 
     private function applyCareToTree(Tree $tree): void
     {
-        $newProgress = $tree->progress + 1;
-        $newLevel = min(self::MAX_LEVEL, intdiv($newProgress, $tree->seed->cares_per_level));
+         $newProgress = $tree->progress + 1;
+    $newLevel = $tree->level;
+
+    if ($newProgress >= $tree->seed->cares_per_level) {
+        $newLevel++;
+        $newProgress = 0;
+        }
 
         $tree->forceFill([
             'progress' => $newProgress,
-            'tree_level' => $newLevel,
+            'level' => $newLevel,
             'health' => min(100, $tree->health + self::HEALTH_PER_CARE),
             'status' => $newLevel >= self::MAX_LEVEL ? TreeStatus::Mature : TreeStatus::Active,
             'last_care_at' => now(),
             'next_care_at' => now()->addMinutes(self::COOLDOWN_MINUTES),
         ])->save();
     }
+
+
+    private function ensureUserOwnsTree(Request $request, Tree $tree): void
+{
+    abort_unless($tree->user_id === $request->user()->id, Response::HTTP_FORBIDDEN);
+}
 }

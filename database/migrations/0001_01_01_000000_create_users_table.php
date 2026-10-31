@@ -18,7 +18,6 @@ return new class extends Migration
             $table->integer('coins')->default(0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->integer('coins')->default('0');
             $table->rememberToken();
             $table->timestamps();
         });
