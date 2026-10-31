@@ -10,16 +10,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
-use HasFactory;
 
 
 class Tree extends Model
 {
-      protected $fillable = [
+    /** @use HasFactory<TreeFactory> */
+    use HasFactory;
+    protected $fillable = [
         'seed_id',
     ];
 
-     protected $attributes = [
+    protected $attributes = [
         'level' => 0,
         'progress' => 0,
         'health' => 100,
@@ -37,13 +38,13 @@ class Tree extends Model
         ];
     }
 
-   
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-  
+
     public function seed(): BelongsTo
     {
         return $this->belongsTo(Seed::class);
@@ -55,19 +56,19 @@ class Tree extends Model
         return $this->hasMany(Effect::class);
     }
 
-  
+
     public function harvest(): void
     {
-        if ($this->status !== TreeStatus::mature) {
+        if ($this->status !== TreeStatus::Mature) {
             throw ValidationException::withMessages([
                 'tree' => 'Este árbol no está listo para cosechar',
             ]);
         }
 
-      
+
         DB::transaction(function () {
             $this->forceFill([
-                'status' => TreeStatus::harvested,
+                'status' => TreeStatus::Harvested,
                 'harvested_at' => now(),
             ])->save();
 

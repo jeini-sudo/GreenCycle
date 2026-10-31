@@ -88,7 +88,7 @@ class TreeCareTest extends TestCase
             ->assertJsonPath('tree.progress', 0)
             ->assertJsonPath('tree.status', 'MATURE');
 
-        $this->assertSame(TreeStatus::mature, $this->tree->fresh()->status);
+        $this->assertSame(TreeStatus::Mature, $this->tree->fresh()->status);
     }
 
     public function test_user_cannot_care_for_another_users_tree(): void
@@ -103,7 +103,7 @@ class TreeCareTest extends TestCase
 
     public function test_mature_tree_cannot_receive_more_care(): void
     {
-        $this->tree->forceFill(['status' => TreeStatus::mature])->save();
+        $this->tree->forceFill(['status' => TreeStatus::Mature])->save();
 
         $this->postJson("/api/trees/{$this->tree->id}/care")->assertStatus(409);
 

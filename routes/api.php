@@ -27,9 +27,12 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::get('user', [AuthController::class, 'me'])->name('user');
 
     //Aquí abajo ir agregando el resto de rutas
-Route::apiResource('trees', TreeController::class);
+    Route::apiResource('trees', TreeController::class)
+        ->only(['index', 'store', 'show']);
 
-Route::post('trees/{tree}/care', [CareController::class, 'store'])->name('trees.care');
+    Route::post('trees/{tree}/care', [CareController::class, 'store'])->name('trees.care');
+
+
 
 
 

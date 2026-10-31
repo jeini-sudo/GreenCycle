@@ -6,8 +6,7 @@ namespace App\Http\Controllers\Api\V1;
 use Illuminate\Http\Request;
 use App\Models\Tree;
 use App\Http\Resources\TreeResource;
-use App\Http\Requests\StoreTreeRequest;
-use App\Http\Requests\UpdateTreeRequest;
+use App\Http\Requests\Api\V1\StoreTreeRequest;
 use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
 

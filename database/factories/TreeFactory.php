@@ -5,6 +5,8 @@ namespace Database\Factories;
 use App\Models\Tree;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\Seed; 
+use App\Enums\TreeStatus; 
 
 /**
  * @extends Factory<Tree>
