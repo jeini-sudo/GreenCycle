@@ -5,11 +5,12 @@ namespace App\Models;
 
 use App\Enums\TreeStatus;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
-
+use HasFactory;
 
 
 class Tree extends Model
@@ -22,7 +23,7 @@ class Tree extends Model
         'level' => 0,
         'progress' => 0,
         'health' => 100,
-        'status' => 'active',
+        'status' => 'ACTIVE',
     ];
 
     protected function casts(): array

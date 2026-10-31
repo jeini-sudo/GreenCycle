@@ -55,9 +55,8 @@ class TreeController extends Controller
         return new TreeResource($tree->load('seed'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
+    /*La api no parece requerir un método para modificarlo, todo cuidado o modificación se hace en otra clase
+    Lo voy a dejar por si se requiriera agregar
     public function update(UpdateTreeRequest $request, Tree $tree)
     {
         //
@@ -68,9 +67,8 @@ class TreeController extends Controller
         return new TreeResource($tree->load('seed'));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
+    El API no parece requerir un destroy/delete
+    Lo voy a dejar por si se requiriera agregar
     public function destroy(Request $request, Tree $tree)
     {
         //
@@ -81,7 +79,7 @@ class TreeController extends Controller
         return response()->json([
             'message' => 'El arbol se fue.',
         ]);
-    }
+    }*/
 
     private function ensureUserOwnsTree(Request $request, Tree $tree): void
     {
