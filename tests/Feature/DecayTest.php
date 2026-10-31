@@ -3,7 +3,7 @@
 namespace Tests\Feature;
 
 use App\Enums\TreeStatus;
-use App\Http\Controllers\Api\V1\TreeHealthController;
+use App\Http\Controllers\Api\V1\DecayController;
 use App\Models\Seed;
 use App\Models\Tree;
 use App\Models\User;
@@ -12,7 +12,7 @@ use Tests\TestCase;
 
 
 //pruebas deterioro y demás
-class TreeHealthTest extends TestCase
+class DecayTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -42,7 +42,7 @@ class TreeHealthTest extends TestCase
             'last_care_at' => now()->subHours(23),
         ])->save();
 
-        (new TreeHealthController())->applyDecay($tree);
+        (new DecayController())->applyDecay($tree);
 
         // No complete day has passed, so health stays at 100.
         $this->assertEquals(100, $tree->fresh()->health);
@@ -56,7 +56,7 @@ class TreeHealthTest extends TestCase
             'last_care_at' => now()->subHours(24),
         ])->save();
 
-        (new TreeHealthController())->applyDecay($tree);
+        (new DecayController())->applyDecay($tree);
 
         // One complete day causes 20 damage.
         $this->assertEquals(80, $tree->fresh()->health);
@@ -70,7 +70,7 @@ class TreeHealthTest extends TestCase
             'last_care_at' => now()->subHours(48),
         ])->save();
 
-        (new TreeHealthController())->applyDecay($tree);
+        (new DecayController())->applyDecay($tree);
 
         // Two complete days cause 40 damage.
         $this->assertEquals(60, $tree->fresh()->health);
@@ -84,7 +84,7 @@ class TreeHealthTest extends TestCase
             'last_care_at' => now()->subHours(48),
         ])->save();
 
-        $controller = new TreeHealthController();
+        $controller = new DecayController();
 
         // First execution applies two days of damage.
         $controller->applyDecay($tree);
@@ -103,39 +103,12 @@ class TreeHealthTest extends TestCase
             'last_care_at' => now()->subHours(120),
         ])->save();
 
-        (new TreeHealthController())->applyDecay($tree);
+        (new DecayController())->applyDecay($tree);
 
         // Five days cause 100 damage and kill the tree.
         $this->assertEquals(0, $tree->fresh()->health);
         $this->assertEquals(TreeStatus::Dead, $tree->fresh()->status);
     }
 
-    public function test_care_restores_health_without_exceeding_100(): void
-    {
-        $tree = $this->createTree();
 
-        $tree->forceFill([
-            'health' => 90,
-        ])->save();
-
-        (new TreeHealthController())->restoreHealth($tree);
-
-        // Restoring 20 cannot increase health beyond 100.
-        $this->assertEquals(100, $tree->health);
-    }
-
-    public function test_dead_tree_cannot_restore_health(): void
-    {
-        $tree = $this->createTree();
-
-        $tree->forceFill([
-            'health' => 0,
-            'status' => TreeStatus::Dead,
-        ])->save();
-
-        (new TreeHealthController())->restoreHealth($tree);
-
-        // Dead trees cannot recover health.
-        $this->assertEquals(0, $tree->health);
-    }
 }

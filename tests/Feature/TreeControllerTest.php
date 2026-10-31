@@ -48,14 +48,12 @@ class TreeControllerTest extends TestCase
             'status' => 'ACTIVE',
         ]);
     }
-
-    public function test_user_cannot_create_tree_with_invalid_seed(): void
+    public function test_user_cannot_create_tree_with_nonexistent_seed(): void
     {
         $this->postJson('/api/trees', [
             'seed_id' => 999999,
         ])
-            ->assertUnprocessable()
-            ->assertJsonValidationErrors(['seed_id']);
+            ->assertNotFound();
 
         $this->assertDatabaseCount('trees', 0);
     }
@@ -100,5 +98,15 @@ class TreeControllerTest extends TestCase
         $this->getJson('/api/trees')
             ->assertOk()
             ->assertJsonCount(1, 'data');
+    }
+    public function test_user_cannot_create_tree_with_invalid_seed_id(): void
+    {
+        $this->postJson('/api/trees', [
+            'seed_id' => 'invalid',
+        ])
+            ->assertUnprocessable()
+            ->assertJsonValidationErrors(['seed_id']);
+
+        $this->assertDatabaseCount('trees', 0);
     }
 }

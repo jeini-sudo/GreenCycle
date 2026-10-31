@@ -8,31 +8,11 @@ use App\Enums\TreeStatus;
 use App\Models\Tree;
 use Illuminate\Support\Facades\DB;
 
-class TreeHealthController extends Controller
+class DecayController extends Controller
 {
     // controlador que se encarga del punto S2.3 Salud y deterioro
-    private const MAX_HEALTH = 100;
-    private const HEALTH_RECOVERY = 20;
     private const DECAY_DAMAGE = 20;
     private const DECAY_INTERVAL_HOURS = 24;
-
-
-    public function restoreHealth(Tree $tree): void
-    {
-        // no recuperar salud si esta muerto o cosechado o maduro
-        if ($tree->status === TreeStatus::Dead || $tree->status === TreeStatus::Harvested || $tree->status === TreeStatus::Mature) {
-            return;
-        }
-
-        $newHealth = min(
-            self::MAX_HEALTH,
-            $tree->health + self::HEALTH_RECOVERY
-        );
-
-        $tree->forceFill([
-            'health' => $newHealth,
-        ])->save();
-    }
 
     public function applyDecay(Tree $tree): void
     {

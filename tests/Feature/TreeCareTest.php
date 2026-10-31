@@ -109,4 +109,25 @@ class TreeCareTest extends TestCase
 
         $this->assertSame(0, $this->tree->fresh()->progress);
     }
+    public function test_care_restores_health_without_exceeding_100(): void
+    {
+        $this->tree->forceFill(['health' => 90])->save();
+
+        $this->postJson("/api/trees/{$this->tree->id}/care")
+            ->assertOk()
+            ->assertJsonPath('tree.health', 100);
+    }
+
+    public function test_dead_tree_cannot_receive_care(): void
+    {
+        $this->tree->forceFill([
+            'health' => 0,
+            'status' => TreeStatus::Dead,
+        ])->save();
+
+        $this->postJson("/api/trees/{$this->tree->id}/care")
+            ->assertStatus(409);
+
+        $this->assertSame(0, $this->tree->fresh()->health);
+    }
 }
