@@ -36,7 +36,7 @@ class CareController extends Controller
 
         if ($tree->next_care_at?->isFuture()) {
             return response()->json([
-                'code' => 'TREE_CARE_COOLDOWN',
+                'code' => 'TREE_CARE_NOT_ALLOWED',
                 'error' => 'El árbol todavía está en tiempo de espera.',
                 'next_care_at' => $tree->next_care_at->toISOString(),
             ], Response::HTTP_CONFLICT);

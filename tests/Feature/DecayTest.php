@@ -16,7 +16,7 @@ class DecayTest extends TestCase
 {
     use RefreshDatabase;
 
-    // Create a tree with the required user and seed.
+
     private function createTree(): Tree
     {
         $user = User::factory()->create();
@@ -35,7 +35,7 @@ class DecayTest extends TestCase
 
     public function test_tree_does_not_decay_before_24_hours(): void
     {
-        // The tree has gone 23 hours without care.
+
         $tree = $this->createTree();
 
         $tree->forceFill([
@@ -44,7 +44,7 @@ class DecayTest extends TestCase
 
         (new DecayController())->applyDecay($tree);
 
-        // No complete day has passed, so health stays at 100.
+
         $this->assertEquals(100, $tree->fresh()->health);
     }
 
@@ -58,7 +58,6 @@ class DecayTest extends TestCase
 
         (new DecayController())->applyDecay($tree);
 
-        // One complete day causes 20 damage.
         $this->assertEquals(80, $tree->fresh()->health);
     }
 
@@ -72,7 +71,7 @@ class DecayTest extends TestCase
 
         (new DecayController())->applyDecay($tree);
 
-        // Two complete days cause 40 damage.
+
         $this->assertEquals(60, $tree->fresh()->health);
     }
 
@@ -86,11 +85,10 @@ class DecayTest extends TestCase
 
         $controller = new DecayController();
 
-        // First execution applies two days of damage.
         $controller->applyDecay($tree);
         $this->assertEquals(60, $tree->fresh()->health);
 
-        // Second execution must not repeat that damage.
+
         $controller->applyDecay($tree);
         $this->assertEquals(60, $tree->fresh()->health);
     }
@@ -105,10 +103,39 @@ class DecayTest extends TestCase
 
         (new DecayController())->applyDecay($tree);
 
-        // Five days cause 100 damage and kill the tree.
+
         $this->assertEquals(0, $tree->fresh()->health);
         $this->assertEquals(TreeStatus::Dead, $tree->fresh()->status);
     }
 
+    public function test_mature_tree_does_not_decay(): void
+    {
+        $tree = $this->createTree();
 
+        $tree->forceFill([
+            'level' => 10,
+            'status' => TreeStatus::Mature,
+            'last_care_at' => now()->subDays(5),
+        ])->save();
+
+        (new DecayController())->applyDecay($tree);
+
+        $this->assertEquals(100, $tree->fresh()->health);
+        $this->assertEquals(TreeStatus::Mature, $tree->fresh()->status);
+    }
+
+    public function test_harvested_tree_does_not_decay(): void
+    {
+        $tree = $this->createTree();
+
+        $tree->forceFill([
+            'status' => TreeStatus::Harvested,
+            'last_care_at' => now()->subDays(5),
+        ])->save();
+
+        (new DecayController())->applyDecay($tree);
+
+        $this->assertEquals(100, $tree->fresh()->health);
+        $this->assertEquals(TreeStatus::Harvested, $tree->fresh()->status);
+    }
 }
