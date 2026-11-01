@@ -10,12 +10,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
+use Database\Factories\TreeFactory;
 
 
 class Tree extends Model
 {
     /** @use HasFactory<TreeFactory> */
     use HasFactory;
+
     protected $fillable = [
         'seed_id',
     ];
