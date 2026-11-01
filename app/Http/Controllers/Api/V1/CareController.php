@@ -28,15 +28,14 @@ class CareController extends Controller
 
         if ($tree->status !== TreeStatus::Active) {
             return response()->json([
+                'code' => 'TREE_CARE_NOT_ALLOWED',
                 'error' => 'Este árbol ya no puede recibir más cuidados.',
             ], Response::HTTP_CONFLICT);
-
-
         }
 
         if ($tree->next_care_at?->isFuture()) {
             return response()->json([
-                'code' => 'TREE_CARE_NOT_ALLOWED',
+                'code' => 'TREE_CARE_COOLDOWN',
                 'error' => 'El árbol todavía está en tiempo de espera.',
                 'next_care_at' => $tree->next_care_at->toISOString(),
             ], Response::HTTP_CONFLICT);
