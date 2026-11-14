@@ -7,9 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PurchasesHistory extends Model
 {
-    
     protected $fillable = [
-        
+
     ];
 
     protected function casts(): array

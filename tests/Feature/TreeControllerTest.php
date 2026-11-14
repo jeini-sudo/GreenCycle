@@ -14,6 +14,7 @@ class TreeControllerTest extends TestCase
     use RefreshDatabase;
 
     private User $testUser;
+
     private Seed $testSeed;
 
     protected function setUp(): void
@@ -48,6 +49,7 @@ class TreeControllerTest extends TestCase
             'status' => 'ACTIVE',
         ]);
     }
+
     public function test_user_cannot_create_tree_with_nonexistent_seed(): void
     {
         $this->postJson('/api/trees', [
@@ -99,6 +101,7 @@ class TreeControllerTest extends TestCase
             ->assertOk()
             ->assertJsonCount(1, 'data');
     }
+
     public function test_user_cannot_create_tree_with_invalid_seed_id(): void
     {
         $this->postJson('/api/trees', [

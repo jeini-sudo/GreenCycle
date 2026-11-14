@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Inventory extends Model
 {
-    
     protected $fillable = [];
 
     public function user(): BelongsTo

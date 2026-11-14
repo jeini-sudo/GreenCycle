@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
 use App\Enums\TreeStatus;
+use App\Http\Controllers\Controller;
 use App\Models\Tree;
 use Illuminate\Support\Facades\DB;
 
@@ -11,6 +11,7 @@ class DecayController extends Controller
 {
     // controlador que se encarga del punto S2.3 Salud y deterioro
     private const DECAY_DAMAGE = 20;
+
     private const DECAY_INTERVAL_HOURS = 24;
 
     public function applyDecay(Tree $tree): void
@@ -64,7 +65,6 @@ class DecayController extends Controller
                 $lockedTree->health -
                 ($completedIntervals * self::DECAY_DAMAGE)
             );
-
 
             $lastDecayAt = $startDate->copy()->addSeconds(
                 $completedIntervals * $intervalSeconds

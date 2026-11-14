@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Effect extends Model
 {
-   
     protected $fillable = [
         'shop_item_id',
         'tree_id',

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ShopItem extends Model
 {
-    
     protected $fillable = [
         'name',
         'prize',

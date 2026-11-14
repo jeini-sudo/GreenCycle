@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-
 use App\Enums\TreeStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\TreeResource;
@@ -15,12 +14,9 @@ class CareController extends Controller
 {
     private const COOLDOWN_MINUTES = 60;
 
-
     private const HEALTH_PER_CARE = 20;
 
     private const MAX_LEVEL = 10;
-
-
 
     public function store(Request $request, Tree $tree)
     {
@@ -58,7 +54,6 @@ class CareController extends Controller
         return $result;
     }
 
-
     private function applyCareToTree(Tree $tree): void
     {
         $newProgress = $tree->progress + 1;
@@ -78,7 +73,6 @@ class CareController extends Controller
             'next_care_at' => now()->addMinutes(self::COOLDOWN_MINUTES),
         ])->save();
     }
-
 
     private function ensureUserOwnsTree(Request $request, Tree $tree): void
     {

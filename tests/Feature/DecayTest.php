@@ -10,12 +10,9 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-
-
 class DecayTest extends TestCase
 {
     use RefreshDatabase;
-
 
     private function createTree(): Tree
     {
@@ -42,8 +39,7 @@ class DecayTest extends TestCase
             'last_care_at' => now()->subHours(23),
         ])->save();
 
-        (new DecayController())->applyDecay($tree);
-
+        (new DecayController)->applyDecay($tree);
 
         $this->assertEquals(100, $tree->fresh()->health);
     }
@@ -56,7 +52,7 @@ class DecayTest extends TestCase
             'last_care_at' => now()->subHours(24),
         ])->save();
 
-        (new DecayController())->applyDecay($tree);
+        (new DecayController)->applyDecay($tree);
 
         $this->assertEquals(80, $tree->fresh()->health);
     }
@@ -69,8 +65,7 @@ class DecayTest extends TestCase
             'last_care_at' => now()->subHours(48),
         ])->save();
 
-        (new DecayController())->applyDecay($tree);
-
+        (new DecayController)->applyDecay($tree);
 
         $this->assertEquals(60, $tree->fresh()->health);
     }
@@ -83,11 +78,10 @@ class DecayTest extends TestCase
             'last_care_at' => now()->subHours(48),
         ])->save();
 
-        $controller = new DecayController();
+        $controller = new DecayController;
 
         $controller->applyDecay($tree);
         $this->assertEquals(60, $tree->fresh()->health);
-
 
         $controller->applyDecay($tree);
         $this->assertEquals(60, $tree->fresh()->health);
@@ -101,8 +95,7 @@ class DecayTest extends TestCase
             'last_care_at' => now()->subHours(120),
         ])->save();
 
-        (new DecayController())->applyDecay($tree);
-
+        (new DecayController)->applyDecay($tree);
 
         $this->assertEquals(0, $tree->fresh()->health);
         $this->assertEquals(TreeStatus::Dead, $tree->fresh()->status);
@@ -118,7 +111,7 @@ class DecayTest extends TestCase
             'last_care_at' => now()->subDays(5),
         ])->save();
 
-        (new DecayController())->applyDecay($tree);
+        (new DecayController)->applyDecay($tree);
 
         $this->assertEquals(100, $tree->fresh()->health);
         $this->assertEquals(TreeStatus::Mature, $tree->fresh()->status);
@@ -133,7 +126,7 @@ class DecayTest extends TestCase
             'last_care_at' => now()->subDays(5),
         ])->save();
 
-        (new DecayController())->applyDecay($tree);
+        (new DecayController)->applyDecay($tree);
 
         $this->assertEquals(100, $tree->fresh()->health);
         $this->assertEquals(TreeStatus::Harvested, $tree->fresh()->status);

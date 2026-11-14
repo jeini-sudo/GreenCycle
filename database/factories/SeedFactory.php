@@ -19,7 +19,7 @@ class SeedFactory extends Factory
     {
         return [
 
-            'seed_name' => fake()->unique()->word() . 'Seed',
+            'seed_name' => fake()->unique()->word().'Seed',
             'special_seed' => false,
             'cares_per_level' => 5,
             'harvest_reward' => 10,

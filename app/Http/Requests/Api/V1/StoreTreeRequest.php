@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Models\Seed;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\Seed;
 use Illuminate\Validation\Validator;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -37,7 +37,7 @@ class StoreTreeRequest extends FormRequest
                 return;
             }
 
-            if (!Seed::whereKey($this->integer('seed_id'))->exists()) {
+            if (! Seed::whereKey($this->integer('seed_id'))->exists()) {
                 throw new NotFoundHttpException('La semilla no existe.');
             }
         });

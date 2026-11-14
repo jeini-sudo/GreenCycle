@@ -2,16 +2,14 @@
 
 namespace App\Models;
 
-
 use App\Enums\TreeStatus;
-use Illuminate\Database\Eloquent\Model;
+use Database\Factories\TreeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\DB;
-use Database\Factories\TreeFactory;
-
+use Illuminate\Validation\ValidationException;
 
 class Tree extends Model
 {
@@ -40,24 +38,20 @@ class Tree extends Model
         ];
     }
 
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-
 
     public function seed(): BelongsTo
     {
         return $this->belongsTo(Seed::class);
     }
 
-
     public function effects(): HasMany
     {
         return $this->hasMany(Effect::class);
     }
-
 
     public function harvest(): void
     {
@@ -66,7 +60,6 @@ class Tree extends Model
                 'tree' => 'Este árbol no está listo para cosechar',
             ]);
         }
-
 
         DB::transaction(function () {
             $this->forceFill([

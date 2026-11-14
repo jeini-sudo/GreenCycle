@@ -2,10 +2,9 @@
 
 namespace App\Http\Requests\Api\V1;
 
+use App\Models\User;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-
-use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -37,11 +36,12 @@ class LoginRequest extends FormRequest
     {
         $user = User::where('email', $this->string('email'))->first();
 
-        if (!$user || !Hash::check($this->string('password'), $user->password)) {
+        if (! $user || ! Hash::check($this->string('password'), $user->password)) {
             throw ValidationException::withMessages([
                 'email' => 'Las credenciales proporcionadas no son correctas.',
             ])->status(401);
         }
+
         return $user;
     }
 }

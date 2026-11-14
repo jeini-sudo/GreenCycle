@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use Illuminate\Http\Request;
-use App\Models\Tree;
-use App\Http\Resources\TreeResource;
-use App\Http\Requests\Api\V1\StoreTreeRequest;
-use Illuminate\Http\Response;
 use App\Http\Controllers\Controller;
-
-
+use App\Http\Requests\Api\V1\StoreTreeRequest;
+use App\Http\Resources\TreeResource;
+use App\Models\Tree;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class TreeController extends Controller
 {
-
     public function index(Request $request)
     {
         //
@@ -26,10 +23,8 @@ class TreeController extends Controller
         return TreeResource::collection($tree);
     }
 
-
     public function store(StoreTreeRequest $request)
     {
-
 
         $tree = $request->user()->trees()->create($request->validated());
 
@@ -37,7 +32,6 @@ class TreeController extends Controller
             ->response()
             ->setStatusCode(Response::HTTP_CREATED);
     }
-
 
     public function show(Request $request, Tree $tree)
     {
@@ -47,11 +41,8 @@ class TreeController extends Controller
         return new TreeResource($tree->load('seed'));
     }
 
-
     private function ensureUserOwnsTree(Request $request, Tree $tree): void
     {
         abort_unless($tree->user_id === $request->user()->id, Response::HTTP_NOT_FOUND);
     }
-
-
 }
