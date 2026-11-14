@@ -56,11 +56,19 @@ class TreeCareTest extends TestCase
     {
         $this->postJson("/api/trees/{$this->tree->id}/care")->assertOk();
 
+        $treeBefore = $this->tree->fresh();
+
         $this->postJson("/api/trees/{$this->tree->id}/care")
             ->assertStatus(409)
             ->assertJsonStructure(['error', 'next_care_at']);
 
-        $this->assertSame(1, $this->tree->fresh()->progress);
+        $treeAfter = $this->tree->fresh();
+
+        $this->assertSame($treeBefore->progress, $treeAfter->progress);
+        $this->assertSame($treeBefore->health, $treeAfter->health);
+        $this->assertSame($treeBefore->level, $treeAfter->level);
+        $this->assertEquals($treeBefore->last_care_at, $treeAfter->last_care_at);
+        $this->assertEquals($treeBefore->next_care_at, $treeAfter->next_care_at);
     }
 
     public function test_five_cares_raise_the_level_and_reset_progress(): void
