@@ -11,7 +11,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 
-//pruebas deterioro y demás
+
 class DecayTest extends TestCase
 {
     use RefreshDatabase;

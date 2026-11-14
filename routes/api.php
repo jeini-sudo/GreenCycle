@@ -8,11 +8,6 @@ use App\Http\Controllers\Api\V1\TreeController;
 
 
 
-/* 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-*/
 
 
 Route::post('register', [AuthController::class, 'register'])
@@ -27,7 +22,7 @@ Route::middleware('auth:sanctum')->group(function (): void {
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('user', [AuthController::class, 'me'])->name('user');
 
-    //Aquí abajo ir agregando el resto de rutas
+
     Route::apiResource('trees', TreeController::class)
         ->only(['index', 'store', 'show']);
 

@@ -9,6 +9,7 @@ use App\Http\Resources\TreeResource;
 use App\Models\Tree;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class CareController extends Controller
 {
@@ -20,35 +21,43 @@ class CareController extends Controller
     private const MAX_LEVEL = 10;
 
 
+
     public function store(Request $request, Tree $tree)
     {
+        $result = DB::transaction(function () use ($request, $tree) {
+            $tree = Tree::query()
+                ->whereKey($tree->id)
+                ->lockForUpdate()
+                ->firstOrFail();
 
-        $this->ensureUserOwnsTree($request, $tree);
+            $this->ensureUserOwnsTree($request, $tree);
 
+            if ($tree->status !== TreeStatus::Active) {
+                return response()->json([
+                    'code' => 'TREE_CARE_NOT_ALLOWED',
+                    'error' => 'Este árbol ya no puede recibir más cuidados.',
+                ], Response::HTTP_CONFLICT);
+            }
 
-        if ($tree->status !== TreeStatus::Active) {
+            if ($tree->next_care_at?->isFuture()) {
+                return response()->json([
+                    'code' => 'TREE_CARE_COOLDOWN',
+                    'error' => 'El árbol todavía está en tiempo de espera.',
+                    'next_care_at' => $tree->next_care_at->toISOString(),
+                ], Response::HTTP_CONFLICT);
+            }
+
+            $this->applyCareToTree($tree);
+
             return response()->json([
-                'code' => 'TREE_CARE_NOT_ALLOWED',
-                'error' => 'Este árbol ya no puede recibir más cuidados.',
-            ], Response::HTTP_CONFLICT);
-        }
+                'message' => 'Cuidado aplicado con éxito',
+                'tree' => new TreeResource($tree->load('seed')),
+            ], Response::HTTP_OK);
+        }, 3);
 
-        if ($tree->next_care_at?->isFuture()) {
-            return response()->json([
-                'code' => 'TREE_CARE_COOLDOWN',
-                'error' => 'El árbol todavía está en tiempo de espera.',
-                'next_care_at' => $tree->next_care_at->toISOString(),
-            ], Response::HTTP_CONFLICT);
-        }
-
-        $this->applyCareToTree($tree);
-
-
-        return response()->json([
-            'message' => 'Cuidado aplicado con éxito',
-            'tree' => new TreeResource($tree->load('seed')),
-        ], Response::HTTP_OK);
+        return $result;
     }
+
 
     private function applyCareToTree(Tree $tree): void
     {

@@ -14,7 +14,6 @@ use Illuminate\Http\Response;
 
 class AuthController extends Controller
 {
-    // quizá podría agregar mensajes personalizados para el logeo y registro
     public function register(RegisterRequest $request): JsonResponse
     {
         $user = User::create($request->validated());

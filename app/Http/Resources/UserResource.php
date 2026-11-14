@@ -21,7 +21,6 @@ class UserResource extends JsonResource
             'email' => $this->email,
             'coins' => $this->coins,
             
-            // no se que tan necesario sea mostrar estos campos, pero por ahora los dejo
             'created_at' => $this->created_at?->toISOString(),
             'updated_at' => $this->updated_at?->toISOString(),
         ];

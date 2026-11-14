@@ -18,7 +18,7 @@ class SeedFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+
             'seed_name' => fake()->unique()->word() . 'Seed',
             'special_seed' => false,
             'cares_per_level' => 5,

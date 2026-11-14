@@ -21,7 +21,6 @@ class TreeFactory extends Factory
     public function definition(): array
     {
         return [
-            // $table->id();
             'user_id' => User::factory(),
             'seed_id' => Seed::factory(),
             'level' => 0,
