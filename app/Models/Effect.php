@@ -10,6 +10,7 @@ class Effect extends Model
     protected $fillable = [
         'shop_item_id',
         'tree_id',
+        'type',
         'started_time',
         'expires_at',
         'status',

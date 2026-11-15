@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\CareController;
+use App\Http\Controllers\Api\V1\InventoryController;
 use App\Http\Controllers\Api\V1\TreeController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,5 +22,11 @@ Route::middleware('auth:sanctum')->group(function (): void {
 
     Route::post('trees/{tree}/care', [CareController::class, 'store'])
         ->name('trees.care');
+
+    Route::get('inventory', [InventoryController::class, 'index'])
+        ->name('inventory.index');
+
+    Route::post('inventory/{item}/use', [InventoryController::class, 'useItem'])
+        ->name('inventory.use');
 
 });
