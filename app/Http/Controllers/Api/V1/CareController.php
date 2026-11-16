@@ -9,10 +9,13 @@ use App\Models\Tree;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use App\Models\Effect;
 
 class CareController extends Controller
 {
     private const COOLDOWN_MINUTES = 60;
+
+    private const ACCELERATOR_COOLDOWN_MINUTES = 30;
 
     private const HEALTH_PER_CARE = 20;
 
@@ -43,7 +46,18 @@ class CareController extends Controller
                 ], Response::HTTP_CONFLICT);
             }
 
-            $this->applyCareToTree($tree);
+            $acceleratorActive = $tree->effects()
+                ->where('type', 'accelerator')
+                ->where('status', true)
+                ->where('expires_at', '>', now())
+                ->exists();
+
+            $this->applyCareToTree(
+                $tree,
+                $acceleratorActive
+                ? self::ACCELERATOR_COOLDOWN_MINUTES
+                : self::COOLDOWN_MINUTES
+            );
 
             return response()->json([
                 'message' => 'Cuidado aplicado con éxito',
@@ -54,8 +68,10 @@ class CareController extends Controller
         return $result;
     }
 
-    private function applyCareToTree(Tree $tree): void
-    {
+    private function applyCareToTree(
+        Tree $tree,
+        int $cooldownMinutes = self::COOLDOWN_MINUTES
+    ): void {
         $newProgress = $tree->progress + 1;
         $newLevel = $tree->level;
 
@@ -68,10 +84,65 @@ class CareController extends Controller
             'progress' => $newProgress,
             'level' => $newLevel,
             'health' => min(100, $tree->health + self::HEALTH_PER_CARE),
-            'status' => $newLevel >= self::MAX_LEVEL ? TreeStatus::Mature : TreeStatus::Active,
+            'status' => $newLevel >= self::MAX_LEVEL
+                ? TreeStatus::Mature
+                : TreeStatus::Active,
             'last_care_at' => now(),
-            'next_care_at' => now()->addMinutes(self::COOLDOWN_MINUTES),
+            'next_care_at' => now()->addMinutes($cooldownMinutes),
         ])->save();
+    }
+
+    public function processAutomaticWatering(): void
+    {
+        $effectIds = Effect::query()
+            ->where('type', 'automatic_watering')
+            ->where('status', true)
+            ->where('expires_at', '>', now())
+            ->pluck('id');
+
+        foreach ($effectIds as $effectId) {
+            DB::transaction(function () use ($effectId) {
+                $candidate = Effect::find($effectId);
+
+                if (!$candidate) {
+                    return;
+                }
+
+                $tree = Tree::query()
+                    ->whereKey($candidate->tree_id)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (!$tree) {
+                    return;
+                }
+
+                $effect = Effect::query()
+                    ->whereKey($effectId)
+                    ->lockForUpdate()
+                    ->first();
+
+                if (
+                    !$effect ||
+                    !$effect->status ||
+                    !$effect->expires_at?->isFuture()
+                ) {
+                    return;
+                }
+
+                if ($tree->status !== TreeStatus::Active) {
+                    $effect->update(['status' => false]);
+
+                    return;
+                }
+
+                if ($tree->next_care_at?->isFuture()) {
+                    return;
+                }
+
+                $this->applyCareToTree($tree);
+            }, 3);
+        }
     }
 
     private function ensureUserOwnsTree(Request $request, Tree $tree): void

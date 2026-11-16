@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\V1\InventoryController;
 use App\Http\Controllers\Api\V1\TreeController;
 use Illuminate\Support\Facades\Route;
 
+
 Route::post('register', [AuthController::class, 'register'])
     ->middleware('throttle:5,1')
     ->name('register');

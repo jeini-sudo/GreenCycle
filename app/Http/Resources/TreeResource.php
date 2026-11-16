@@ -20,7 +20,7 @@ class TreeResource extends JsonResource
             'progress' => $this->progress,
             'health' => $this->health,
             'status' => $this->status,
-            'seed' => $this->whenLoaded('seed', fn () => [
+            'seed' => $this->whenLoaded('seed', fn() => [
                 'id' => $this->seed->id,
                 'seed_name' => $this->seed->seed_name,
                 'cares_per_level' => $this->seed->cares_per_level,
@@ -30,7 +30,10 @@ class TreeResource extends JsonResource
             'next_care_at' => $this->next_care_at?->toISOString(),
             'last_decay_at' => $this->last_decay_at?->toISOString(),
             'harvested_at' => $this->harvested_at?->toISOString(),
-
+            'active_effects' => $this->whenLoaded(
+                'effects',
+                fn() => EffectResource::collection($this->effects)
+            ),
         ];
     }
 }

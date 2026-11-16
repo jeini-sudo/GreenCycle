@@ -42,10 +42,15 @@ class TreeController extends Controller
 
     public function show(Request $request, Tree $tree)
     {
-        //
         $this->ensureUserOwnsTree($request, $tree);
 
-        return new TreeResource($tree->load('seed'));
+        return new TreeResource($tree->load([
+            'seed',
+            'effects' => fn($query) => $query
+                ->with('shopItem')
+                ->where('status', true)
+                ->where('expires_at', '>', now()),
+        ]));
     }
 
     private function ensureUserOwnsTree(Request $request, Tree $tree): void
